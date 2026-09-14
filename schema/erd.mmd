@@ -1,0 +1,38 @@
+erDiagram
+    RIDERS ||--o{ TRIPS : takes
+    DRIVERS ||--o{ TRIPS : provides
+    DRIVERS ||--o{ DRIVER_BADGE_AWARDS : receives
+    DRIVER_BADGES ||--o{ DRIVER_BADGE_AWARDS : awarded_as
+
+    RIDERS {
+        int rider_id PK
+        string display_name
+    }
+
+    DRIVERS {
+        int driver_id PK
+        string display_name
+        boolean is_active
+        decimal rating
+    }
+
+    TRIPS {
+        int trip_id PK
+        int rider_id FK
+        int driver_id FK
+        string pickup_location
+        string dropoff_location
+        datetime started_at
+        decimal fare_amount
+    }
+
+    DRIVER_BADGES {
+        int badge_id PK
+        string badge_name
+    }
+
+    DRIVER_BADGE_AWARDS {
+        int driver_id PK, FK
+        int badge_id PK, FK
+        datetime awarded_at
+    }

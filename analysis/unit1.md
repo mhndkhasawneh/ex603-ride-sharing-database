@@ -1,4 +1,19 @@
-### Task 1.4: your modelling justification and your reflection. 
-### Task 1.4: Write up your reasoning
--  Modelling justification, 400 to 600 words. Cover your key design decisions: your choice of primary keys, your ON DELETE behaviors, and which rules you chose to enforce in the schema rather than leaving to the application.
--  Reflection, 150 to 250 words. Your ERD encodes decisions the requirements left open. Name one decision you made that a different designer could reasonably have made differently, and defend your choice in terms of the read and write patterns the platform will face.
+## Modelling Justification
+
+The Ride Sharing database was designed around five required relations: riders, drivers, trips, driver badges, and driver badge awards. I used simple integer identifiers as primary keys for riders, drivers, trips, and driver badges because these values provide stable and unique identifiers that are independent of user-facing data. For example, a rider or driver display name could change or could be shared by more than one person, so it would not be reliable as a primary key. The `driver_badge_awards` relation uses a composite primary key made from `driver_id` and `badge_id`. This ensures that the same badge cannot be assigned to the same driver more than once.
+
+The `trips` relation is the main event table and contains foreign keys to both the rider and driver involved in the trip. It also stores the trip start time, pickup and drop-off locations, and fare amount. I chose to represent the pickup and drop-off locations as text fields because the purpose of this project is to model the required ride-sharing relationships rather than build a geographic information system. A more complex implementation could later separate locations into their own relation or use latitude and longitude coordinates.
+
+For trip foreign keys, I chose `ON DELETE RESTRICT` for both riders and drivers. Trip records represent historical transactions, and deleting a rider or driver should not automatically remove that history. Preventing deletion while related trips exist protects the accuracy of the data and makes it possible to preserve historical fare totals and trip activity. In contrast, the `driver_badge_awards` relation uses `ON DELETE CASCADE`. Badge award records only exist to connect drivers with badges, so they have no independent meaning if either the driver or badge no longer exists. Automatically removing those rows avoids orphaned junction records.
+
+Several business rules are enforced directly in the schema instead of relying only on application logic. Driver ratings must remain between 1.0 and 5.0, fare amounts cannot be negative, required attributes cannot be null, and badge names must be unique. These rules represent data conditions that should never be violated, regardless of which application or interface writes to the database. Enforcing them at the database level provides a final layer of protection against invalid data.
+
+The design intentionally remains focused on the requirements rather than modeling every feature a commercial ride-sharing platform might have. Additional attributes such as payment methods, vehicle details, trip status, or precise geographic coordinates could be added later if the platform requirements expand.
+
+## Reflection
+
+One design decision that another designer could reasonably make differently is how pickup and drop-off locations are represented. I chose to store `pickup_location` and `dropoff_location` directly in the `trips` relation as text attributes. An alternative design could create a separate locations relation and have each trip reference pickup and drop-off locations through foreign keys. Another approach could store latitude and longitude coordinates to support more precise geographic analysis.
+
+For the current requirements, I chose text attributes because location information belongs directly to each trip and the database does not currently need to perform geographic calculations. Trips will be written frequently, so keeping the locations in the trip record also makes each new trip simpler to store because it does not require finding or creating separate location records first. Common reads of individual trip information can retrieve the rider, driver, locations, time, and fare from the same relation.
+
+This choice does have limitations. Text locations can be inconsistent and are less useful for geographic analysis. If the platform later needed to calculate distances, identify trips within geographic areas, or standardize frequently used locations, I would reconsider this design and use structured geographic data.
