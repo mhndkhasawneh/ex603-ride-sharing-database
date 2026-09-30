@@ -4,9 +4,12 @@ erDiagram
     DRIVERS ||--o{ DRIVER_BADGE_AWARDS : receives
     DRIVER_BADGES ||--o{ DRIVER_BADGE_AWARDS : awarded_as
 
+    RIDERS o|--o{ RIDERS : refers
+
     RIDERS {
         int rider_id PK
         string display_name
+        int referred_by FK
     }
 
     DRIVERS {
