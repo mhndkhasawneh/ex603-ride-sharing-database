@@ -1,1 +1,5 @@
+# Unit 3 Finding
 
+The dashboard reported that about half of all trips ended with a rider no-show, which caused the driver bonuses to be frozen. After looking deeper into the data, I found that this did not match what was actually recorded. Out of 200 total trips, only 12 had **"Rider no show"** as the cancellation reason, meaning the actual rider no-show rate was only **6%**.
+
+The issue appears to come from how empty cancellation reasons were handled when filtering the data. I found **166 trips** with no cancellation reason. When I tested a filter against the cancellation reason, these empty values were left out without any error, which could cause the remaining records to give a misleading picture of the overall data. After correcting the filter to properly account for the empty values, I also checked which riders were involved in rider no-show trips using multiple methods and obtained the same results. Since the dashboard reported about half of the trips as rider no-shows while the actual data shows only **6%**, I think it is safe to unfreeze the driver bonuses and use the corrected calculation going forward.
