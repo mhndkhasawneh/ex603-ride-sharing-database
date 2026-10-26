@@ -30,8 +30,6 @@ The Entity Relationship Diagram (ERD) represents the five relations in the ride-
 
 ![Ride Sharing Database ERD](schema/erd.png)
 
-### Schema
-
 ## Schema
 
 The database schema is defined in [`schema.sql`](schema.sql) and models the main data needed for the ride-sharing platform.
@@ -51,3 +49,20 @@ The schema uses foreign keys to maintain relationships between the tables. Trips
 The rider referral is modeled as a recursive relationship, where a rider can optionally reference another rider as their referrer. Driver badges use a many-to-many relationship because a driver can earn multiple badges and the same badge can be awarded to multiple drivers.
 
 The schema also uses `CHECK` constraints to prevent invalid data from being stored and explicit `ON DELETE` actions to define what happens to related records when referenced data is removed. The reasoning behind these constraint choices is documented in [`analysis/unit2.md`](analysis/unit2.md).
+
+### Query Catalogue
+
+#### Unit 4: From Rows to Insight
+
+**`queries/unit4/q4_1.sql`**
+
+- **4.1.1:** How many trips were recorded, what are the fare statistics, and how many unique riders used the platform?
+- **4.1.2:** How many trips did each driver have, and what was their average fare?
+- **4.1.3:** Which drivers had at least 10 trips, and what were their average fares?
+- **4.1.4:** How do trip counts and average fares vary by driver and pickup city?
+
+**`queries/unit4/q4_2.sql`**
+
+- **4.2A:** How many trips and rider no-shows did each driver have?
+- **4.2B:** How many trips and rider no-shows occurred in each city and across the entire platform?
+- **4.2C:** What is the overall rider no-show rate among drivers with at least 10 trips?
